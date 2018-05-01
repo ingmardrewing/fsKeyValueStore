@@ -1,9 +1,8 @@
-package main
+package fsKeyValueStore
 
 import (
 	"os"
 	"path"
-	"runtime"
 	"testing"
 
 	"github.com/ingmardrewing/fs"
@@ -16,17 +15,12 @@ func TestMain(m *testing.M) {
 }
 
 func tearDown() {
-	dir := path.Join(getTestFileDirPath(), "testResources/db")
+	dir := path.Join(fs.Pwd(), "testResources/db")
 	fs.RemoveDirContents(dir)
 }
 
-func getTestFileDirPath() string {
-	_, filename, _, _ := runtime.Caller(1)
-	return path.Dir(filename)
-}
-
 func TestPathExists(t *testing.T) {
-	p := path.Join(getTestFileDirPath(), "testResources/not-here")
+	p := path.Join(fs.Pwd(), "testResources/not-here")
 
 	expected := false
 	actual := pathExists(p)
@@ -35,7 +29,7 @@ func TestPathExists(t *testing.T) {
 		t.Error("Expected pathExists to return", expected, "but it returned", actual)
 	}
 
-	p = path.Join(getTestFileDirPath(), "testResources/db")
+	p = path.Join(fs.Pwd(), "testResources/db")
 
 	expected = true
 	actual = pathExists(p)
@@ -47,7 +41,7 @@ func TestPathExists(t *testing.T) {
 }
 
 func TestNewFilePersistence_returns_an_error_when_given_an_invalid_dirpath(t *testing.T) {
-	p := path.Join(getTestFileDirPath(), "testResources/not-here")
+	p := path.Join(fs.Pwd(), "testResources/not-here")
 
 	_, err := newFilePersistence(p)
 
@@ -57,7 +51,7 @@ func TestNewFilePersistence_returns_an_error_when_given_an_invalid_dirpath(t *te
 }
 
 func TestNewFilePersistence_returns_a_struct_when_given_a_valid_path(t *testing.T) {
-	dir := path.Join(getTestFileDirPath(), "testResources/db")
+	dir := path.Join(fs.Pwd(), "testResources/db")
 	fp, err := newFilePersistence(dir)
 
 	if err != nil {
@@ -181,7 +175,7 @@ func TestFilePersistence_createIfNonExistentElseUpdate_works(t *testing.T) {
 }
 
 func givenFilePersistence() persistence {
-	dir := path.Join(getTestFileDirPath(), "testResources/db")
+	dir := path.Join(fs.Pwd(), "testResources/db")
 	fp, _ := newFilePersistence(dir)
 	return fp
 }
