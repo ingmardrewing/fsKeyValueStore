@@ -39,7 +39,7 @@ func Initialize(dirpath ...string) {
 // Stores a value under the given key
 // if the key / value pair didn't already exist
 // as a persisted entity, it will be created
-func (fp *filePersistence) CreateIfNonExistentElseUpdate(key, value string) error {
+func CreateIfNonExistentElseUpdate(key, value string) error {
 	return fsStore.createIfNonExistentElseUpdate(key, value)
 }
 
